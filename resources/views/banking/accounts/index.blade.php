@@ -41,7 +41,7 @@
                 <tbody>
                 @foreach($accounts as $item)
                     <tr>
-                        @if ($auth_user->can('read-reports-income-expense-summary'))
+                        @if (!empty($auth_user) && $auth_user->can('read-reports-income-expense-summary'))
                         <td><a href="{{ url('reports/income-expense-summary?accounts[]=' . $item->id) }}">{{ $item->name }}</a></td>
                         @else
                         <td><a href="{{ route('accounts.edit', $item->id) }}">{{ $item->name }}</a></td>

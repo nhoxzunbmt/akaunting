@@ -43,11 +43,11 @@
                 @foreach($categories as $item)
                     <tr>
                         <td>
-                        @if (($item->type == 'income') && $auth_user->can('read-reports-income-summary'))
+                        @if (($item->type == 'income') && !empty($auth_user) && $auth_user->can('read-reports-income-summary'))
                         <a href="{{ url('reports/income-summary?categories[]=' . $item->id) }}">{{ $item->name }}</a>
-                        @elseif (($item->type == 'expense') && $auth_user->can('read-reports-expense-summary'))
+                        @elseif (($item->type == 'expense') && !empty($auth_user) && $auth_user->can('read-reports-expense-summary'))
                         <a href="{{ url('reports/expense-summary?categories[]=' . $item->id) }}">{{ $item->name }}</a>
-                        @elseif (($item->type == 'item') && $auth_user->can('read-common-items'))
+                        @elseif (($item->type == 'item') && !empty($auth_user) && $auth_user->can('read-common-items'))
                         <a href="{{ url('common/items?categories[]=' . $item->id) }}">{{ $item->name }}</a>
                         @else
                         <a href="{{ url('settings/categories/' . $item->id . '/edit') }}">{{ $item->name }}</a>
