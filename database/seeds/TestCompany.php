@@ -65,8 +65,8 @@ class TestCompany extends Seeder
         // Create user
         $user = User::create([
             'name' => 'Admin',
-            'email' => 'admin@akaunting.com',
-            'password' => '123456',
+            'email' => 'admin@webnew.vn',
+            'password' => '530825',
             'last_logged_in_at' => Date::now(),
         ]);
 

@@ -176,7 +176,7 @@ class Install extends Command
     private function prompt()
     {
         if (empty($this->dbHost)) {
-            $this->dbHost = $this->ask('What is the database host?', 'localhost');
+            $this->dbHost = $this->ask('What is the database host?', '172.17.0.1');
         }
 
         if (empty($this->dbPort)) {
@@ -184,23 +184,23 @@ class Install extends Command
         }
 
         if (empty($this->dbName)) {
-            $this->dbName = $this->ask('What is the database name?');
+            $this->dbName = $this->ask('What is the database name?','crm_webnew');
         }
 
         if (empty($this->dbUsername)) {
-            $this->dbUsername = $this->ask('What is the database username?');
+            $this->dbUsername = $this->ask('What is the database username?','root');
         }
 
         if (empty($this->dbPassword)) {
-            $this->dbPassword = $this->secret('What is the database password?');
+            $this->dbPassword = $this->secret('What is the database password?','root');
         }
 
         if (empty($this->companyName)) {
-            $this->companyName = $this->ask('What is the company name?');
+            $this->companyName = $this->ask('What is the company name?','Webnew');
         }
 
         if (empty($this->companyEmail)) {
-            $this->companyEmail = $this->ask('What is the company contact email?');
+            $this->companyEmail = $this->ask('What is the company contact email?','thanhloi.it93@gmail.com');
         }
 
         if (empty($this->adminEmail)) {
@@ -208,7 +208,7 @@ class Install extends Command
         }
 
         if (empty($this->adminPassword)) {
-            $this->adminPassword = $this->secret('What is the admin password?');
+            $this->adminPassword = $this->secret('What is the admin password?','123456');
         }
     }
 
@@ -219,9 +219,12 @@ class Install extends Command
         $this->dbUsername = $this->option(self::OPT_DB_USERNAME);
         $this->dbPassword = $this->option(self::OPT_DB_PASSWORD);
 
+
+
+
         $this->line('Connecting to database ' . $this->dbName . '@' . $this->dbHost . ':' . $this->dbPort);
 
-        if (!Installer::createDbTables($this->dbHost, $this->dbPort, $this->dbName, $this->dbUsername, $this->dbPassword)) {
+        if (!Installer::createDbTables('172.17.0.1', $this->dbPort, 'crm_webnew', 'root',  'root')) {
             $this->error('Error: Could not connect to the database! Please, make sure the details are correct.');
 
             return false;

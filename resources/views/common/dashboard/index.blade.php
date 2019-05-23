@@ -7,7 +7,7 @@
         <!---Income-->
         <div class="col-md-4">
             <div class="info-box">
-                @if ($auth_user->can('read-reports-income-summary'))
+                @if (!empty($auth_user) && $auth_user->can('read-reports-income-summary'))
                 <a href="{{ url('reports/income-summary') }}"><span class="info-box-icon bg-aqua"><i class="fa fa-money"></i></span></a>
                 @else
                 <span class="info-box-icon bg-aqua"><i class="fa fa-money"></i></span>
@@ -30,7 +30,7 @@
         <!---Expense-->
         <div class="col-md-4">
             <div class="info-box">
-                @if ($auth_user->can('read-reports-expense-summary'))
+                @if (!empty($auth_user) && $auth_user->can('read-reports-expense-summary'))
                 <a href="{{ url('reports/expense-summary') }}"><span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span></a>
                 @else
                 <span class="info-box-icon bg-red"><i class="fa fa-shopping-cart"></i></span>
@@ -54,7 +54,7 @@
         <!---Profit-->
         <div class="col-md-4">
             <div class="info-box">
-                @if ($auth_user->can('read-reports-income-expense-summary'))
+                @if (!empty($auth_user) && $auth_user->can('read-reports-income-expense-summary'))
                 <a href="{{ url('reports/income-expense-summary') }}"><span class="info-box-icon bg-green"><i class="fa fa-heart"></i></span></a>
                 @else
                 <span class="info-box-icon bg-green"><i class="fa fa-heart"></i></span>

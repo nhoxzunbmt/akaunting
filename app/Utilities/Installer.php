@@ -185,7 +185,7 @@ class Installer
             'DB_DATABASE'   =>  $database,
             'DB_USERNAME'   =>  $username,
             'DB_PASSWORD'   =>  $password,
-            'DB_PREFIX'     =>  $prefix,
+            'DB_PREFIX'     =>  'wn_',
         ]);
 
         $con = env('DB_CONNECTION', 'mysql');
