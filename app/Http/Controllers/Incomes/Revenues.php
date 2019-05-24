@@ -65,7 +65,11 @@ class Revenues extends Controller
 
         $account_currency_code = Account::where('id', setting('general.default_account'))->pluck('currency_code')->first();
 
+
+
         $currency = Currency::where('code', $account_currency_code)->first();
+
+
 
         $customers = Customer::enabled()->orderBy('name')->pluck('name', 'id');
 

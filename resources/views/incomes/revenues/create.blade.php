@@ -159,6 +159,8 @@
 
                     amount = $('#amount').maskMoney('unmasked')[0];
 
+                    console.log(data);
+
                     $("#amount").maskMoney({
                         thousands : data.thousands_separator,
                         decimal : data.decimal_mark,
