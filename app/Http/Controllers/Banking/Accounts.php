@@ -222,6 +222,7 @@ class Accounts extends Controller
     {
         $account_id = (int) request('account_id');
 
+
         if (empty($account_id)) {
             return response()->json([]);
         }

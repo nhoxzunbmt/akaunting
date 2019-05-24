@@ -159,7 +159,7 @@
 
                     amount = $('#amount').maskMoney('unmasked')[0];
 
-                    console.log(data);
+                    console.log(amount,data);
 
                     $("#amount").maskMoney({
                         thousands : data.thousands_separator,

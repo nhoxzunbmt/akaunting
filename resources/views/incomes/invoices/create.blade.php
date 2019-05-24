@@ -323,6 +323,9 @@
 
                         var currency = json['data']['currency'];
 
+
+                        console.log(currency);
+
                         $('#item-price-' + item_row).maskMoney({
                             thousands : currency.thousands_separator,
                             decimal : currency.decimal_mark,
@@ -461,9 +464,13 @@
                         input_price_id = $(this).attr('id');
                         input_currency_id = input_price_id.replace('price', 'currency');
 
+                        console.log('data.currency_code',data.currency_code);
+
                         $('#' + input_currency_id).val(data.currency_code);
 
                         amount = $(this).maskMoney('unmasked')[0];
+
+                        console.log(amount,' $(document).on(\'change\', \'#customer_id\'');
 
                         $(this).maskMoney({
                             thousands : data.thousands_separator,
@@ -474,7 +481,7 @@
                             suffix : (data.symbol_first) ? '' : data.symbol
                         });
 
-                        $(this).val(amount);
+                        ///$(this).val(amount);
 
                         $(this).trigger('focusout');
                     });
@@ -561,6 +568,8 @@
 
                             amount = $(this).maskMoney('unmasked')[0];
 
+                            console.log(amount,$(this).maskMoney('unmasked'));
+
                             $(this).maskMoney({
                                 thousands : data.thousands_separator,
                                 decimal : data.decimal_mark,
@@ -570,7 +579,7 @@
                                 suffix : (data.symbol_first) ? '' : data.symbol
                             });
 
-                            $(this).val(amount);
+                            // $(this).val(amount);
 
                             $(this).trigger('focusout');
                         });
