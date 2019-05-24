@@ -37,7 +37,9 @@ class Revenues extends Controller
 
         $transfer_cat_id = Category::transfer();
 
-        return view('incomes.revenues.index', compact('revenues', 'customers', 'categories', 'accounts', 'transfer_cat_id'));
+        $date_format = 'Y-m-d';
+
+        return view('incomes.revenues.index', compact('revenues', 'customers', 'categories', 'accounts', 'transfer_cat_id','date_format'));
     }
 
     /**

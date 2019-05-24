@@ -53,24 +53,27 @@ class Invoices extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with(['customer', 'status', 'items', 'payments', 'histories'])->collect(['invoice_number'=> 'desc']);
+        $invoices = Invoice::with(['customer', 'status', 'items', 'payments', 'histories'])->collect(['invoice_number' => 'desc']);
 
         $customers = collect(Customer::enabled()->orderBy('name')->pluck('name', 'id'));
 
         $categories = collect(Category::enabled()->type('income')->orderBy('name')->pluck('name', 'id'));
 
-        $statuses = collect(InvoiceStatus::get()->each(function($item) {
+        $statuses = collect(InvoiceStatus::get()->each(function ($item) {
             $item->name = trans('invoices.status.' . $item->code);
             return $item;
         })->pluck('name', 'code'));
 
-        return view('incomes.invoices.index', compact('invoices', 'customers', 'categories', 'statuses'));
+
+        $date_format = 'Y-m-d';
+
+        return view('incomes.invoices.index', compact('invoices', 'customers', 'categories', 'statuses', 'date_format'));
     }
 
     /**
      * Show the form for viewing the specified resource.
      *
-     * @param  Invoice  $invoice
+     * @param  Invoice $invoice
      *
      * @return Response
      */
@@ -90,7 +93,9 @@ class Invoices extends Controller
 
         $customer_share = SignedUrl::sign(route('signed.invoices', $invoice->id));
 
-        return view('incomes.invoices.show', compact('invoice', 'accounts', 'currencies', 'account_currency_code', 'customers', 'categories', 'payment_methods', 'customer_share'));
+        $date_format = 'Y-m-d';
+
+        return view('incomes.invoices.show', compact('invoice', 'accounts', 'currencies', 'account_currency_code', 'customers', 'categories', 'payment_methods', 'customer_share','date_format'));
     }
 
     /**
@@ -120,7 +125,7 @@ class Invoices extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      *
      * @return Response
      */
@@ -138,7 +143,7 @@ class Invoices extends Controller
     /**
      * Duplicate the specified resource.
      *
-     * @param  Invoice  $invoice
+     * @param  Invoice $invoice
      *
      * @return Response
      */
@@ -168,7 +173,7 @@ class Invoices extends Controller
     /**
      * Import the specified resource.
      *
-     * @param  ImportFile  $import
+     * @param  ImportFile $import
      *
      * @return Response
      */
@@ -211,7 +216,7 @@ class Invoices extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Invoice  $invoice
+     * @param  Invoice $invoice
      *
      * @return Response
      */
@@ -235,8 +240,8 @@ class Invoices extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Invoice  $invoice
-     * @param  Request  $request
+     * @param  Invoice $invoice
+     * @param  Request $request
      *
      * @return Response
      */
@@ -254,7 +259,7 @@ class Invoices extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Invoice  $invoice
+     * @param  Invoice $invoice
      *
      * @return Response
      */
@@ -268,7 +273,7 @@ class Invoices extends Controller
                 return;
             }
 
-            $item->quantity += (double) $invoice_item->quantity;
+            $item->quantity += (double)$invoice_item->quantity;
             $item->save();
         });
 
@@ -370,7 +375,7 @@ class Invoices extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($html);
 
-        $file = storage_path('app/temp/invoice_'.time().'.pdf');
+        $file = storage_path('app/temp/invoice_' . time() . '.pdf');
 
         $invoice->pdf_path = $file;
 
@@ -444,7 +449,7 @@ class Invoices extends Controller
 
         //$pdf->setPaper('A4', 'portrait');
 
-        $file_name = 'invoice_'.time().'.pdf';
+        $file_name = 'invoice_' . time() . '.pdf';
 
         return $pdf->download($file_name);
     }
@@ -498,7 +503,7 @@ class Invoices extends Controller
     /**
      * Add payment to the invoice.
      *
-     * @param  PaymentRequest  $request
+     * @param  PaymentRequest $request
      *
      * @return Response
      */
@@ -515,7 +520,7 @@ class Invoices extends Controller
 
         $total_amount = $invoice->amount;
 
-        $default_amount = (double) $request['amount'];
+        $default_amount = (double)$request['amount'];
 
         if ($invoice->currency_code == $request['currency_code']) {
             $amount = $default_amount;
@@ -523,11 +528,11 @@ class Invoices extends Controller
             $default_amount_model = new InvoicePayment();
 
             $default_amount_model->default_currency_code = $invoice->currency_code;
-            $default_amount_model->amount                = $default_amount;
-            $default_amount_model->currency_code         = $request['currency_code'];
-            $default_amount_model->currency_rate         = $currencies[$request['currency_code']];
+            $default_amount_model->amount = $default_amount;
+            $default_amount_model->currency_code = $request['currency_code'];
+            $default_amount_model->currency_rate = $currencies[$request['currency_code']];
 
-            $default_amount = (double) $default_amount_model->getDivideConvertedAmount();
+            $default_amount = (double)$default_amount_model->getDivideConvertedAmount();
 
             $convert_amount = new InvoicePayment();
 
@@ -536,7 +541,7 @@ class Invoices extends Controller
             $convert_amount->currency_code = $invoice->currency_code;
             $convert_amount->currency_rate = $currencies[$invoice->currency_code];
 
-            $amount = (double) $convert_amount->getDynamicConvertedAmount();
+            $amount = (double)$convert_amount->getDynamicConvertedAmount();
         }
 
         if ($invoice->payments()->count()) {
@@ -550,8 +555,8 @@ class Invoices extends Controller
             $multiplier *= 10;
         }
 
-        $amount_check = (int) ($amount * $multiplier);
-        $total_amount_check = (int) (round($total_amount, $currency->precision) * $multiplier);
+        $amount_check = (int)($amount * $multiplier);
+        $total_amount_check = (int)(round($total_amount, $currency->precision) * $multiplier);
 
         if ($amount_check > $total_amount_check) {
             $error_amount = $total_amount;
@@ -560,11 +565,11 @@ class Invoices extends Controller
                 $error_amount_model = new InvoicePayment();
 
                 $error_amount_model->default_currency_code = $request['currency_code'];
-                $error_amount_model->amount                = $error_amount;
-                $error_amount_model->currency_code         = $invoice->currency_code;
-                $error_amount_model->currency_rate         = $currencies[$invoice->currency_code];
+                $error_amount_model->amount = $error_amount;
+                $error_amount_model->currency_code = $invoice->currency_code;
+                $error_amount_model->currency_rate = $currencies[$invoice->currency_code];
 
-                $error_amount = (double) $error_amount_model->getDivideConvertedAmount();
+                $error_amount = (double)$error_amount_model->getDivideConvertedAmount();
 
                 $convert_amount = new InvoicePayment();
 
@@ -573,7 +578,7 @@ class Invoices extends Controller
                 $convert_amount->currency_code = $request['currency_code'];
                 $convert_amount->currency_rate = $currencies[$request['currency_code']];
 
-                $error_amount = (double) $convert_amount->getDynamicConvertedAmount();
+                $error_amount = (double)$convert_amount->getDynamicConvertedAmount();
             }
 
             $message = trans('messages.error.over_payment', ['amount' => money($error_amount, $request['currency_code'], true)]);
@@ -616,7 +621,7 @@ class Invoices extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  InvoicePayment  $payment
+     * @param  InvoicePayment $payment
      *
      * @return Response
      */
@@ -632,7 +637,7 @@ class Invoices extends Controller
 
         $invoice->save();
 
-        $desc_amount = money((float) $payment->amount, (string) $payment->currency_code, true)->format();
+        $desc_amount = money((float)$payment->amount, (string)$payment->currency_code, true)->format();
 
         $description = $desc_amount . ' ' . trans_choice('general.payments', 1);
 
@@ -669,19 +674,19 @@ class Invoices extends Controller
 
         if ($currency) {
             // it should be integer for amount mask
-            $currency->precision = (int) $currency->precision;
+            $currency->precision = (int)$currency->precision;
         }
 
         $html = view('incomes.invoices.item', compact('item_row', 'taxes', 'currency'))->render();
 
         return response()->json([
             'success' => true,
-            'error'   => false,
-            'data'    => [
+            'error' => false,
+            'data' => [
                 'currency' => $currency
             ],
             'message' => 'null',
-            'html'    => $html,
+            'html' => $html,
         ]);
     }
 
