@@ -179,6 +179,8 @@
 @endpush
 
 @push('scripts')
+    <script src="{{asset('public/js/autoNumeric.js')}}"></script>
+
     <script type="text/javascript">
         var focus = false;
         var item_row = '{{ $item_row }}';
@@ -191,17 +193,26 @@
             $('#customer_id').trigger('change');
             @endif
 
-            $('.input-price').maskMoney({
-                thousands : '{{ $currency->thousands_separator }}',
-                decimal : '{{ $currency->decimal_mark }}',
-                precision : {{ $currency->precision }},
-                allowZero : true,
-                @if($currency->symbol_first)
-                prefix : '{{ $currency->symbol }}'
-                @else
-                suffix : '{{ $currency->symbol }}'
-                @endif
+
+
+            $('.input-price').autoNumeric('init', {
+                mDec: 0,
+                vMin: 0,
+                vMax: 999999999999,
+                aSep: '.',
+                aDec: ',',
             });
+            {{--$('.input-price').maskMoney({--}}
+                {{--thousands : '{{ $currency->thousands_separator }}',--}}
+                {{--decimal : '{{ $currency->decimal_mark }}',--}}
+                {{--precision : {{ $currency->precision }},--}}
+                {{--allowZero : true,--}}
+                {{--@if($currency->symbol_first)--}}
+                {{--prefix : '{{ $currency->symbol }}'--}}
+                {{--@else--}}
+                {{--suffix : '{{ $currency->symbol }}'--}}
+                {{--@endif--}}
+            {{--});--}}
 
             $('.input-price').trigger('focusout');
 
@@ -326,14 +337,14 @@
 
                         console.log(currency);
 
-                        $('#item-price-' + item_row).maskMoney({
-                            thousands : currency.thousands_separator,
-                            decimal : currency.decimal_mark,
-                            precision : currency.precision,
-                            allowZero : true,
-                            prefix : (currency.symbol_first) ? currency.symbol : '',
-                            suffix : (currency.symbol_first) ? '' : currency.symbol
-                        });
+                        // $('#item-price-' + item_row).maskMoney({
+                        //     thousands : currency.thousands_separator,
+                        //     decimal : currency.decimal_mark,
+                        //     precision : currency.precision,
+                        //     allowZero : true,
+                        //     prefix : (currency.symbol_first) ? currency.symbol : '',
+                        //     suffix : (currency.symbol_first) ? '' : currency.symbol
+                        // });
 
                         $('#item-price-' + item_row).trigger('focusout');
 
@@ -468,18 +479,18 @@
 
                         $('#' + input_currency_id).val(data.currency_code);
 
-                        amount = $(this).maskMoney('unmasked')[0];
-
-                        console.log(amount,' $(document).on(\'change\', \'#customer_id\'');
-
-                        $(this).maskMoney({
-                            thousands : data.thousands_separator,
-                            decimal : data.decimal_mark,
-                            precision : data.precision,
-                            allowZero : true,
-                            prefix : (data.symbol_first) ? data.symbol : '',
-                            suffix : (data.symbol_first) ? '' : data.symbol
-                        });
+                        // amount = $(this).maskMoney('unmasked')[0];
+                        //
+                        // console.log(amount,' $(document).on(\'change\', \'#customer_id\'');
+                        //
+                        // $(this).maskMoney({
+                        //     thousands : data.thousands_separator,
+                        //     decimal : data.decimal_mark,
+                        //     precision : data.precision,
+                        //     allowZero : true,
+                        //     prefix : (data.symbol_first) ? data.symbol : '',
+                        //     suffix : (data.symbol_first) ? '' : data.symbol
+                        // });
 
                         ///$(this).val(amount);
 
@@ -566,18 +577,18 @@
 
                             $('#' + input_currency_id).val(data.currency_code);
 
-                            amount = $(this).maskMoney('unmasked')[0];
-
-                            console.log(amount,$(this).maskMoney('unmasked'));
-
-                            $(this).maskMoney({
-                                thousands : data.thousands_separator,
-                                decimal : data.decimal_mark,
-                                precision : data.precision,
-                                allowZero : true,
-                                prefix : (data.symbol_first) ? data.symbol : '',
-                                suffix : (data.symbol_first) ? '' : data.symbol
-                            });
+                            // amount = $(this).maskMoney('unmasked')[0];
+                            //
+                            // console.log(amount,$(this).maskMoney('unmasked'));
+                            //
+                            // $(this).maskMoney({
+                            //     thousands : data.thousands_separator,
+                            //     decimal : data.decimal_mark,
+                            //     precision : data.precision,
+                            //     allowZero : true,
+                            //     prefix : (data.symbol_first) ? data.symbol : '',
+                            //     suffix : (data.symbol_first) ? '' : data.symbol
+                            // });
 
                             // $(this).val(amount);
 
